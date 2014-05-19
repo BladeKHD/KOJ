@@ -1,0 +1,100 @@
+{% extends "base.html" %}
+
+{% block title %} blog list {% endblock %}
+{%include 'header.html'%}
+{%include 'profile.html'%}
+<p>{{profile.username}}</p>
+{% block content %}
+
+<div class="container">
+	
+	<div class="col-md-7">
+		<pre>
+			<code>
+		{%if user.is_staff%}
+{{code.source}}
+        {%else%}
+        {% ifequal user.username solution.user_id %}
+{{code.source}}
+        {% else %}
+                <p>You Are not allowed to See The Code</p>
+        {% endifequal %}
+        {%endif%}	
+
+/**************************************************************
+	Problem: {{solution.problem_id}}
+	User: {{solution.user_id}}
+	Language: <span id='lang'>{{solution.language}}</span>
+	Result: <span id='result'>{{solution.result}}</span>
+	Time:{{solution.time}} ms
+	Memory:{{solution.memory}} kb
+****************************************************************/	
+			</code>
+		</pre>
+	</div>
+	<div class="col-md-5">	
+		{{user.username}}
+		{{solution.problem_id}}
+	</div>
+</div>
+<script>hljs.initHighlightingOnLoad();</script>
+<script>
+switch($('#lang').html()){
+                case '0':
+                $('#lang').empty().append('GCC')
+                break
+
+                case '1':
+                $('#lang').empty().append('G++')
+                break
+
+                case '2':
+                $('#lang').empty().append('Pascal')
+                break
+
+                case '3':
+                $('#lang').empty().append('Java')
+                break
+            }
+
+switch($('#result').html()){
+                case '4':
+                $('#result').empty().append('Accepted')
+                break
+
+                case '5':
+                $('#result').empty().append('Presentation Error')
+                break
+
+                case '6':
+                $('#result').empty().append('Wrong Answer')
+                break
+
+                case '7':
+                $('#result').empty().append('Time Limit Exceeded')
+                break
+
+                case '8':
+                $('#result').empty().append('Memory Limit Exceeded')
+                break
+
+                case '9':
+                $('#result').empty().append('Output Limit Exceeded')
+                break
+
+                case '10':
+                $('#result').empty().append('Runtime Error')
+                break
+
+                case '11':
+                $('#result').empty().append('Compile Error')
+                break
+
+                case '13':
+                $('#result').empty().append('TestRuning')
+                break
+
+
+            }
+</script>
+{% endblock %}

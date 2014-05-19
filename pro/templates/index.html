@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block title %} blog list {% endblock %}
+{%include 'header.html'%}
+{%include 'profile.html'%}
+<p>{{profile.username}}</p>
+
+{% block content %}
+<div class="container">
+	<div class="banner">
+	      <div class="jumbotron">
+	          <h1 id="banner_title">DreamCode</h1>
+	          <p>ACM入门 | 空军航空大学</p>
+	          <p><a class="btn btn-success btn-lg" role="button" data-toggle="modal" data-target="#myModal">了解更多</a></p>
+	      </div>
+  	</div>
+</div>
+{% endblock %}

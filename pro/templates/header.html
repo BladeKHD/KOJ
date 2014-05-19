@@ -1,0 +1,41 @@
+<header class="navbar navbar-inverse navbar-fixed-top bs-docs-nav" role="banner">
+    <div class="container">
+        <div class="navbar-header">
+            <button class="navbar-toggle" type="button" data-toggle="collapse" data-target=".bs-navbar-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="/oj/" class="navbar-brand">DreameCode</a>
+        </div>
+        <nav class="collapse navbar-collapse bs-navbar-collapse" role="navigation">
+          <ul class="nav navbar-nav">
+              <li><a href="/oj/problemlist/">ProblemList</a></li>
+		          <li><a href="/oj/contestlist/">Contest</a></li>
+              <li><a href="/oj/status/">Status</a></li>   
+              <li><a href="/oj/ranklist">Ranklist</a> </li>    
+          </ul>
+
+          <ul class="nav navbar-nav navbar-right">
+              
+              {%if user.is_authenticated%}
+              <li class="dropdown">
+                <a id="drop" role="button" class="dropdown-toggle" data-toggle="dropdown">{{user.username}}<b class="caret"></b></a>
+                <ul class="dropdown-menu" role="menu" aria-labelledby="drop1">
+                  <li><a href="/oj/userdetail/{{user.username}}">{{user.username}}</a></li>
+                </ul>
+                <li><a href="/oj/logout">Logout</a></li>
+              </li>
+              {%else%}
+              <li><a href="/oj/login">Login</a></li>
+              <li><a href="/oj/register">Register</a></li>
+              {%endif%}
+          </ul>
+        </nav>
+    </div>
+</header>
+<br>
+<br>
+<br>
+<br>

@@ -1,0 +1,262 @@
+{% extends "base.html" %}
+
+{% block title %} blog list {% endblock %}
+
+
+{% block content %}
+<link rel="stylesheet" href="./static/css/problemlist.css">
+
+
+
+<div class="container">
+<div class="pagination">
+    
+</div><!--  end for pagination -->
+
+<form action="" method="post">
+    {%for field in form%}
+    <div class="fieldWrapper">
+        {{field.errors}}
+        {{field.label_tag}}{{field}}{{field.value}}
+    </div>
+    {%endfor%}
+    <p><input type="submit"></p>
+</form>
+<form class="form-horizontal" role="form" action="" method="post" >
+    <div class="form-group">
+        <label class="col-sm-1 control-label" for="problem_id">Problem</label>
+        <div class="col-sm-1">
+            <input type="text" name="problem_id" class=" form-control">
+        </div>
+        <label class="col-sm-1 control-label" for="user_id">Author</label>
+        <div class="col-sm-1">
+            <input type="text" name="user_id" class="form-control">
+        </div>
+        <div class="col-sm-2">
+        <select class="form-control" name="result">
+          <option value='A'>All</option>
+          <option value="0">Wating</option>
+          <option value="1">Wating Rejudge</option>
+          <option value="2">Compiling</option>
+          <option value="3">Runing and Judge</option>
+          <option value="4">Accepted</option>
+          <option value="5">Presentation Error</option>
+          <option value="6">Wrong Answer</option>
+          <option value="7">Time Limit Exceeded</option>
+          <option value="8">Memory Limit Exceeded</option>
+          <option value="9">Output Limit Exceeded</option>
+          <option value="10">Runtime Exceeded</option>
+          <option value="11">Copile Error</opinton>
+          <option value="12">Compile OK</option>
+          <option value="13">Test Run</option>
+        </select>
+        </div>
+        {{result.value}}
+        <div class="col-sm-2">
+            <select class="form-control" name="lang">
+                <option value="A">All</option>
+                <option value="0">C</option>
+                <option value="1">C++</option>
+                <option value="2">Pascal</option>
+                <option value="3">Java</option>
+            </select>
+        </div>
+        <button type="submit" class="btn btn-primary">Search</button>    
+    </div>
+</form>
+
+<table class="table table-striped table-condensed table-hover">
+	<thead><tr>
+		<th>#</th>
+		<th>Problem</th>
+        <th>User</th>
+        <th>Result</th>
+        <th>Memory</th>
+        <th>Time</th>
+        <th>Language</th>
+        <th>CodeLength</th>
+        <th>SubmitTime</th>
+	</tr></thead>
+	<tbody>
+    {%for status in statuses%}
+    <tr align="left">
+        <td class="sid" >{{status.solution_id}}</td>
+        <td><a href="/oj/problem/{{status.problem_id}}">{{status.problem_id}}</a></td>
+        <td><a href="/oj/userdetail/{{status.user_id}}">{{status.user_id}}</a></td>
+        <td  class='result' id={{forloop.counter}}>{{status.result}}</td>
+        <td class='memo'>{{status.memory}}kb</td>
+        <td class='time'>{{status.time}}ms</td>
+        <!-- <td></td> -->
+        <td>
+        {%if user.is_staff%}
+            <a href="/oj/code/{{status.solution_id}}" target="_blank" class='lang'>{{status.language}}</a>
+        {%else%}
+        {% ifequal user.username status.user_id %}
+                <a href="/oj/code/{{status.solution_id}}" target="_blank" class='lang'>{{status.language}}</a>
+        {% else %}
+                <a href="#" class='lang'>{{status.language}}</a>
+        {% endifequal %}
+        {%endif%}
+        </td>
+
+        <td>{{status.code_length}}B</td>
+        <td>{{status.in_date | date:"o-n-j G:i:s"}}</td>
+    
+    </tr>
+    {%endfor%}
+    </tbody>    
+</table>
+<ul class="pager">
+    {%if statuses.has_previous%}
+    <li><a href="?page={{statuses.previous_page_number}}">Previous</a></li>
+    {%else%}
+    <li class="disabled"><a href="#">Previous</a></li>
+    {%endif%}
+    {%if statuses.has_next%}
+
+    <li><a href="?page={{statuses.next_page_number}}">Next</a></li>
+    {%else%}
+    <li class="disabled"><a href="#">Next</a></li>
+    {%endif%}
+    <li><a href="?page=1">Top</a></li>
+</ul>
+
+</div>
+<script>
+        
+    $("td.result").each(function(){
+        switch($("#"+i).html()){
+            case '0':
+            $("#"+i).empty().append('<i class="icon-spin icon-spinner icon-2x"></i>Wating')           
+             break
+            case '1':
+            $("#"+i).empty().append('<i class="icon-spinner icon-spin icon-2x"></i>Wating Rejudge');           
+            break
+            case '2':
+            $("#"+i).empty().append('<i class="icon-spin icon-spinner icon-2x"></i>Compiling')            
+            break
+            case '3':
+            $("#"+i).empty().append('<i class=" icon-spin icon-spinner icon-2x"></i>Runing');           
+            break
+            case '4':
+            $("#"+i).empty().append('<i class=" icon-ok icon-2x"></i> <span class="green">Accepted</span>');
+            break
+            case '5':
+            $("#"+i).empty().append('<i class=" icon-remove icon-2x"></i>Presentation Error');
+            break
+            case '6':
+            $("#"+i).empty().append('<i class=" icon-remove icon-2x"></i> <span class="red"> Wrong Answer<span>');            
+            break
+            case '7':
+            $("#"+i).empty().append('<i class=" icon-remove icon-2x"></i>Time Limit Exceeded');            
+            break
+            case '8':
+            $("#"+i).empty().append('<i class=" icon-remove icon-2x"></i>Memory Limit Exceeded');            
+            break
+            case '9':
+                $("#"+i).empty().append('<i class=" icon-remove icon-2x"></i>Output Limit Exceeded');            
+            break
+            case '10':
+            $("#"+i).empty().append('<i class=" icon-remove icon-2x"></i>Runtime Error');     
+            break
+            case '11':
+            $("#"+i).empty().append('<i class=" icon-exclamation-sign icon-2x"></i>Compile Error');
+            break
+            case '12':
+            $("#"+i).empty().append('<i class=" icon-exclamation-sign icon-2x"></i>Compile OK');
+            break
+            case '13':
+            $("#"+i).empty().append('<i class=" icon-adjust icon-2x"></i>TestRuning');
+            break
+            default:
+                 $("#"+i).append('None');
+             }
+        });
+    $("a.lang").each(
+        function(){
+           switch($("#"+i).html()){
+            case "0":
+            $("#"+i).empty().append("GCC")
+            break
+            case "1":
+            $("#"+i).empty().append("G++")
+            break
+            case "2":
+            $("#"+i).empty().append("Pascal")
+            break
+            case "3":
+            $("#"+i).empty().append("Java")
+            break
+            default:
+            $("#"+i).empty().append("Unkonwn")
+            break
+           }
+        });
+        </script>
+<script>
+    // var i=0
+    function update(){
+        var i=1
+        $("td.sid").each(function(){
+           $.post("/oj/update/",{"sid":$(this).html()},
+            function(data){ 
+               // alert(i)
+             $("#"+i).empty().append(data);     
+            
+            switch($("#"+i).html()){
+            case '0':
+            $("#"+i).empty().append('<i class="icon-spin icon-spinner icon-2x"></i>Wating')           
+             break
+            case '1':
+            $("#"+i).empty().append('<i class="icon-spinner icon-spin icon-2x"></i>Wating Rejudge');           
+            break
+            case '2':
+            $("#"+i).empty().append('<i class="icon-spin icon-spinner icon-2x"></i>Compiling')            
+            break
+            case '3':
+            $("#"+i).empty().append('<i class=" icon-spin icon-spinner icon-2x"></i>Runing');           
+            break
+            case '4':
+            $("#"+i).empty().append('<i class=" icon-ok icon-2x"></i> <span class="green">Accepted</span>');
+            break
+            case '5':
+            $("#"+i).empty().append('<i class=" icon-remove icon-2x"></i>Presentation Error');
+            break
+            case '6':
+            $("#"+i).empty().append('<i class=" icon-remove icon-2x"></i> <span class="red"> Wrong Answer<span>');            
+            break
+            case '7':
+            $("#"+i).empty().append('<i class=" icon-remove icon-2x"></i>Time Limit Exceeded');            
+            break
+            case '8':
+            $("#"+i).empty().append('<i class=" icon-remove icon-2x"></i>Memory Limit Exceeded');            
+            break
+            case '9':
+                $("#"+i).empty().append('<i class=" icon-remove icon-2x"></i>Output Limit Exceeded');            
+            break
+            case '10':
+            $("#"+i).empty().append('<i class=" icon-remove icon-2x"></i>Runtime Error');     
+            break
+            case '11':
+            $("#"+i).empty().append('<i class=" icon-exclamation-sign icon-2x"></i>Compile Error');
+            break
+            case '12':
+            $("#"+i).empty().append('<i class=" icon-exclamation-sign icon-2x"></i>Compile OK');
+            break
+            case '13':
+            $("#"+i).empty().append('<i class=" icon-adjust icon-2x"></i>TestRuning');
+            break
+            default:
+                 $("#"+i).empty().append('None');
+             }
+              
+            i++;
+           });
+            
+        });
+        setTimeout("update()",1000);
+
+}
+update();
+</script>
+{% endblock %}

@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block title %} blog list {% endblock %}
+{%include 'header.html'%}
+{% load bootstrap_toolkit %}
+{% load url from future %}
+{% bootstrap_stylesheet_tag %}
+{% bootstrap_stylesheet_tag "responsive" %}
+{% block content %}
+<div class="center-block">
+	{%if oldpassword_is_wrong %}
+	<div class="alert alert-error">
+		<h3>The old Password is Wrong</h3>
+	</div>
+	{%endif%}
+	{%if is_changpwd%}
+	<p>ChangPassWord Success</p>
+	{%endif%}
+  <form action="" method="POST">
+  {{form.as_p}}
+    <input type="submit" value="CHange" class="btn btn-primary">
+    <p>{{user.username}}
+    	<br>
+    	{{user.password}}
+    	<br>
+    	{{user.last_login}}</p>
+
+  </form>
+  <a href="/oj/logout/">logout</a>
+</div>
+{% endblock %}

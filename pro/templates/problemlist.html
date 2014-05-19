@@ -1,0 +1,113 @@
+{% extends "base.html" %}
+{}
+{% block title %} blog list {% endblock %}
+
+
+{% block content %}
+<link rel="stylesheet" href="./static/css/problemlist.css">
+
+
+
+<div class="container">
+<div class="pagination">
+    {%if problems.has_previous%}
+        <li><a href="?page={{problems.previous_page_number}}">&laquo;</a></li>
+    {%else%}
+        <li class="disabled"><a href="#">&laquo;</a></li>
+    {%endif%}
+
+    {%for i in problems.paginator.page_range %}
+        {%ifequal problems.number i%}
+            <li class="active"><a href="?page={{i}}">{{i}}</a></li>
+        {%else%}
+            <li><a href="?page={{i}}">{{i}}</a></li>
+        {%endifequal%}
+    {%endfor%}
+
+    {%if problems.has_next%}
+        <li><a href="?page={{problems.next_page_number }}">&raquo;</a></li>
+    {%else%}
+        <li class="disabled"><a href="#">&raquo;</a></li>
+    {%endif%}
+</div><!--  end for pagination -->
+
+<table class="table table-striped table-condensed table-hover">
+	<thead><tr>
+		<th>Problem</th>
+        <th>Diffculty</th>
+		<th>Title</th>
+        <th>Mark</th>
+        <th>Ratio(AC/Submit)</th>
+        
+	</tr></thead>
+	<tbody>
+    {% for problem in problems %}
+    <tr align="left">
+    	<td width="5%">{{problem.problem_id}}</td>
+        <td id='diff{{forloop.counter}}'>{{problem.diff}}</td>
+    	<td><a href="/oj/problem/{{problem.problem_id}}">{{problem.title}}</a></td>
+        <td>{{problem.mark}}</td>
+        <td id='ra{{forloop.counter}}' width='10%'>({{problem.accepted}}/{{problem.submit}})</td>
+        
+        <script>
+        var ac,sub,ra;
+        ac={{problem.accepted}};
+        sub={{problem.submit}};
+        ra=(ac/sub).toFixed(2);
+        $('#ra{{forloop.counter}}').empty().append(ra+'&nbsp;({{problem.accepted}}/{{problem.submit}})');
+        </script>
+    </tr>
+        <script>
+        var i=1;
+        switch($('#diff{{forloop.counter}}').html()){
+            case '1':
+            $('#diff{{forloop.counter}}').empty().append('<i class="icon-star"></i>')
+            for(i=1;i<=4;i++){
+               $('#diff{{forloop.counter}}').append('<i class="icon-star-empty"></i>') 
+            }
+            break
+            case '2':
+            $('#diff{{forloop.counter}}').empty()
+            for(i=1;i<=2;i++){
+                $('#diff{{forloop.counter}}').append('<i class="icon-star"></i>')
+            }
+            for(i=1;i<=3;i++){
+               $('#diff{{forloop.counter}}').append('<i class="icon-star-empty"></i>') 
+            }
+            break
+
+            case '3':
+            $('#diff{{forloop.counter}}').empty()
+            for(i=1;i<=3;i++){
+                $('#diff{{forloop.counter}}').append('<i class="icon-star"></i>')
+            }
+            for(i=1;i<=2;i++){
+               $('#diff{{forloop.counter}}').append('<i class="icon-star-empty"></i>') 
+            }
+            break
+
+            case '4':
+            $('#diff{{forloop.counter}}').empty()
+            for(i=1;i<=4;i++){
+                $('#diff{{forloop.counter}}').append('<i class="icon-star"></i>')
+            }
+            for(i=1;i<=1;i++){
+               $('#diff{{forloop.counter}}').append('<i class="icon-star-empty"></i>') 
+            }
+            break
+
+            case '5':
+            $('#diff{{forloop.counter}}').empty()
+            for(i=1;i<=5;i++){
+                $('#diff{{forloop.counter}}').append('<i class="icon-star"></i>')
+            }
+            
+            break
+
+        }
+        </script>
+    {% endfor %} 
+    </tbody>    
+</table>
+</div>
+{% endblock %}

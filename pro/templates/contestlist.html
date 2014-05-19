@@ -1,0 +1,129 @@
+{% extends "base.html" %}
+{}
+{% block title %} blog list {% endblock %}
+
+
+{% block content %}
+<link rel="stylesheet" href="./static/css/problemlist.css">
+
+
+
+<div class="container">
+<div class="pagination">
+    {%if contests.has_previous%}
+        <li><a href="?page={{contests.previous_page_number}}">&laquo;</a></li>
+    {%else%}
+        <li class="disabled"><a href="#">&laquo;</a></li>
+    {%endif%}
+
+    {%for i in contests.paginator.page_range %}
+        {%ifequal contests.number i%}
+            <li class="active"><a href="?page={{i}}">{{i}}</a></li>
+        {%else%}
+            <li><a href="?page={{i}}">{{i}}</a></li>
+        {%endifequal%}
+    {%endfor%}
+
+    {%if contests.has_next%}
+        <li><a href="?page={{contests.next_page_number }}">&raquo;</a></li>
+    {%else%}
+        <li class="disabled"><a href="#">&raquo;</a></li>
+    {%endif%}
+</div><!--  end for pagination -->
+
+<table class="table table-striped table-condensed table-hover">
+	<thead><tr>
+		<th>#</th>
+		<th>Title</th>
+        <th>StartTime</th>
+        <th>EndTime</th>
+        <th>Status</th>
+        <th>Type</th>
+	</tr></thead>
+	<tbody>
+    {% for contest in contests %}
+    <tr align="left">
+    	<td width="5%">{{contest.contest_id}}</td>
+    	
+        <td><a href="/oj/contest/{{contest.contest_id}}/#overview">{{contest.title}}</a></td>
+        <td width="15%" class="start">{{contest.start_time| date:"o-n-j G:i:s"}}</td>
+        <td width="15%" class="end">{{contest.end_time | date:"o-n-j G:i:s"}}</td>
+        <td width="5%" ><span class="label label-primary" id="status{{forloop.counter}}">Success</span></td>
+        {%if contest.private%}
+        <td width="5%">Private</td>
+        {%else%}
+        <td width="5%">Public</td>
+        {%endif%}
+
+    </tr>
+    <script type="text/javascript">
+    var start=new Date("{{contest.start_time | date:"o-n-j G:i:s" }}");
+    var end=new Date("{{contest.end_time | date:"o-n-j G:i:s"}}");
+    var n=new Date("{{now | date:"o-n-j G:i:s"}}");
+    // alert(n);
+    if (n<start){
+        // alert("scheduled");
+        document.getElementById('status{{forloop.counter}}').innerHTML="Scheduled";
+        $("#status{{forloop.counter}}").removeClass("label-primary").addClass("label-success");
+
+    }
+    if(n>end){
+        // alert("end");
+        document.getElementById('status{{forloop.counter}}').innerHTML="End";
+        $("#status{{forloop.counter}}").removeClass("label-primary").addClass("label-default");
+    }
+    if (n<end && n>start){
+        // alert("runing{{forloop.counter}}");
+        document.getElementById('status{{forloop.counter}}').innerHTML="Runing";
+    }
+    </script>
+        
+    {% endfor %} 
+    </tbody>    
+</table>
+
+<ul class="pager">
+    {%if contests.has_previous%}
+    <li><a href="?page={{statuses.previous_page_number}}">Previous</a></li>
+    {%else%}
+    <li class="disabled"><a href="#">Previous</a></li>
+    {%endif%}
+    {%if statuses.has_next%}
+
+    <li><a href="?page={{statuses.next_page_number}}">Next</a></li>
+    {%else%}
+    <li class="disabled"><a href="#">Next</a></li>
+    {%endif%}
+    <li><a href="?page=1">Top</a></li>
+</ul>
+</div>
+// <script>
+var diff=new Date("{{now | date:"o-n-j G:i:s"}}").getTime()-new Date().getTime();
+// alert(diff);
+// var n=$('.start').innerHTML;
+// alert(n);
+// var planstart=new Date("{{contest.start_time | date:"o-n-j G:i:s" }}");
+// alert(planstart);
+// var n=$('.start').innerHTML;
+
+// var diff=new Date("{{now | date:"o-n-j G:i:s"}}").getTime()-new Date().getTime();
+// var planstart=new Date("{{contest.start_time | date:"o-n-j G:i:s" }}");
+// var planend=new Date("{{contest.end_time | date:"o-n-j G:i:s"}}");
+// var now = new Date(new Date().getTime()+diff);
+// alert(now);
+//     if(now>planend){
+//         $("#status").removeClass("label-primary").addClass("label-default");
+//         n="End";
+//         document.getElementById('status').innerHTML=n;
+//     }
+//     if(now<planstart){
+//         n="scheduled";
+//         document.getElementById('status').innerHTML=n;
+//         $("#status").removeClass("label-primary").addClass("label-success");
+//     }
+// // $(document).ready(function){
+// //     $.ajax({url:"/oj/problem/"+})
+
+
+// </script>
+{% endblock %}

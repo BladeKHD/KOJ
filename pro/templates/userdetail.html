@@ -1,0 +1,152 @@
+{% extends "base.html" %}
+
+{% block title %}AUAF OnlineJudge {% endblock %}
+{%include 'header.html'%}
+{%include 'profile.html'%}
+
+{% block content %}
+<link rel="stylesheet" href="/static/css/editor_sample.css">
+<style type="text/css">
+#editor {overflow:scroll; max-height:300px}
+#tx{
+	width: :40px;
+	height: :40px;
+	}
+.pro a{
+	max-width:40px;
+	background-color: gray;
+	margin: 2px;
+	/*border:1px ;*/
+	padding: 2px;
+	border-color: gray;
+	float: left;
+	color:white;
+	}
+.ac a{
+	background-color: green;
+	/*padding: 2px;*/
+	color:white;
+	}
+
+
+
+	</style>
+
+<div class="container">
+	<div class="tx col-md-3" >
+		<img src="/static/img/tx.gif" alt="..." class="img-rounded">
+	</div>
+	<div class="col-md-9">
+
+		<h2>{{userdetail.username}}</h2>
+		<p>{{uinfo.nickname}}</p>
+		<hr>
+		<table>
+			<tbody>
+			<tr>
+				<td>&nbsp;&nbsp;<i class= "icon-map-marker icon-2x"></i></td>
+				<td><p>The Avaition University of AirForce</p></td>
+			</tr>
+			<tr>
+				<td><i class= "icon-group icon-2x"></i></td>
+				<td><p>Team 1</p></td>
+			</tr>
+			<tr>
+				<td><i class= "icon-bar-chart icon-2x"></td>
+				<td><strong>{{uinfo.solved}}</strong></span>
+		/<span class="text-danger"><strong>{{uinfo.submit}}</strong></span></td>
+			</tr>
+			<tr>
+				<td><i class="icon-time icon-2x"></td>
+				<td>{{userdetail.last_login |timesince }}&nbsp;ago</td>
+			</tr>
+			<tr>
+				<td><i class= "icon-quote-left icon-2x"></i></td>
+				<td>{{uinfo.motto}}<i class= "icon-quote-right icon-2x"></i></td>
+				<td></td>
+			</tr>
+			</tbody>
+		</table>
+	</div><!-- div class="col-md-9" -->
+	<ul class="nav nav-tabs">
+        <li><a href="#problem" data-toggle="tab" >Problem</a></li>
+        <li><a href="#blog" data-toggle="tab">Blog</a></li>
+        <li><a href="#" data-toggle="tab">Message</a></li>
+        <li><a href="#" data-toggle="tab">Edit</a></li>
+    </ul>
+    <div class="tab-content">
+	    <div class="tab-pane active" id="problem">
+			
+					{%for i in problem_list%}
+						<div class="pro" id="{{i.problem_id}}"><a href="/oj/problem/{{i.problem_id}}" >{{i.problem_id}}</a></div>
+						{%for j in solved_list%}
+							{%ifequal i.problem_id j.problem_id%}
+								<script>
+								$("#{{i.problem_id}}").addClass("ac")
+								</script>
+								
+								
+							{%endifequal%}
+						{%endfor%}
+					{%endfor%}
+
+				
+	    </div>
+	    <div class="tab-pane" id="blog">
+	    	<div class="container">
+	    		
+	    	<br>
+			{%ifequal userdetail.username user.username%}
+	    	<a href="/oj/blog/new" class="btn btn-success pull-right">New Article</a>
+			{%endifequal%}
+			{%for article in article_list%}
+			<a href="/oj/blog/{{article.article_id}}"><h3>{{article.title}}</h3></a>
+			<p>{{article.content}}</p>
+			{%endfor%}
+	    	</div>
+	
+	</div>
+</div>
+<script>
+
+		// This code is generally not necessary, but it is here to demonstrate
+		// how to customize specific editor instances on the fly. This fits well
+		// this demo because we have editable elements (like headers) that
+		// require less features.
+
+		// The "instanceCreated" event is fired for every editor instance created.
+		CKEDITOR.on( 'instanceCreated', function( event ) {
+			var editor = event.editor,
+				element = editor.element;
+
+			// Customize editors for headers and tag list.
+			// These editors don't need features like smileys, templates, iframes etc.
+			if ( element.is( 'h1', 'h2', 'h3' ) || element.getAttribute( 'id' ) == 'taglist' ) {
+				// Customize the editor configurations on "configLoaded" event,
+				// which is fired after the configuration file loading and
+				// execution. This makes it possible to change the
+				// configurations before the editor initialization takes place.
+				editor.on( 'configLoaded', function() {
+
+					// Remove unnecessary plugins to make the editor simpler.
+					editor.config.removePlugins = 'colorbutton,find,flash,font,' +
+						'forms,iframe,image,newpage,removeformat,' +
+						'smiley,specialchar,stylescombo,templates';
+
+					// Rearrange the layout of the toolbar.
+					editor.config.toolbarGroups = [
+						{ name: 'editing',		groups: [ 'basicstyles', 'links' ] },
+						{ name: 'undo' },
+						{ name: 'clipboard',	groups: [ 'selection', 'clipboard' ] },
+						{ name: 'about' }
+					];
+				});
+			}
+		});
+
+	</script>
+
+
+
+
+{% endblock %}

@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+
+{% block title %} blog list {% endblock %}
+{%include 'header.html'%}
+{% load url from future %}
+
+{% block content %}
+<style>
+.sign{
+	width:330px;
+}
+.center-block {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+</style>
+<div class="container">
+	<div class="sign center-block" >
+    {% if password_is_wrong %}
+        <div class="alert  alert-warning">
+            <button type="button" class="close" data-dismiss="alert">×</button>
+            <h4>Error!</h4><p>Wrong Password or UserName</p>
+        </div>
+    {% endif %}
+
+    
+      
+		<form class="form-signin" role="form" width="40%" method="post">
+
+        <h2 class="form-signin-heading">Please sign in</h2>
+        <input type="text" class="form-control" placeholder="User Name" required autofocus name="username">
+        
+        <input type="password" class="form-control" placeholder="Password" required name="password">
+        <label class="checkbox">
+          <input type="checkbox" value="remember-me"> Remember me
+        </label>
+        <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+      	</form>
+	</div>
+</div>
+<form action=""method="post">
+  {{form.as_p}}
+  <input type="submit">
+</form>
+    
+    <div class="well">
+        <h1>数据库脚本发布系统</h1>
+        <p> </p>
+        <form class="form-horizontal" action="" method="post">
+          {% if password_is_wrong %}
+          <div class="alert alert-error">
+            <button type="button" class="close" data-dismiss="alert">×</button>
+            <h4>Error!</h4>Wrong Password or UserName
+          </div>
+          {% endif %}
+            
+            <p class="form-actions">
+                <input type="submit" value="登录" class="btn btn-primary">
+                <a href="/contactme/"><input type="button" value="忘记密码" class="btn btn-danger"></a>
+                <a href="/contactme/"><input type="button" value="新员工？" class="btn btn-success"></a>
+            </p>
+        </form>
+    </div>
+{% endblock %}

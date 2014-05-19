@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+
+
+
+{% block content %}
+<div class="container">
+	<h2>{{problem.problem_id}}:{{problem.title}}</h2>
+	<div class="row">
+		<div class="col-md-9">
+			<h3>Description</h3>
+			<div class="well">
+				{{problem.description | safe}}
+			</div>
+			<h3>Input</h3>
+			<div class="well">
+				{{problem.output | safe}}
+			</div>
+			<h3>Output</h3>
+			<div class="well">
+				{{problem.output| safe}}
+			</div>
+			<h3>SampleInput</h3>
+			<div class="well">
+				{{problem.sample_input| safe}}
+			</div>
+			<h3>SampleOutput</h3>
+			<div class="well">
+				{{problem.sample_output| safe}}
+			</div>
+			{%if problem.hint%}
+			<h3>Hint</h3>
+			<div class="well">
+				{{problem.hint | safe	}}
+			</div>
+			{% endif %}
+			{%if problem.source%}
+			<h3>Source</h3>
+			<div class="well">
+				{{problem.source | safe}}
+			</div>
+			{%endif%}
+		</div>
+		<div class="col-md-3">
+			<p>adfasfasffffffffffffffffffffffffffff</p>
+		</div>
+	</div> <!-- row-end -->
+	
+
+</div> <!-- container-end -->
+
+{% endblock %}

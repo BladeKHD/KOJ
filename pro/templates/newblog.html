@@ -1,0 +1,184 @@
+{% extends "base.html" %}
+
+{% block title %} blog list {% endblock %}
+{%include 'header.html'%}
+{%include 'profile.html'%}
+<p>{{profile.username}}</p>
+
+{% block content %}
+<style>
+	#epiceditor{
+		margin:5px black;
+	}
+</style>
+<script>
+</script>
+<div class="container">
+	<form action="" method="post" class="form-horziontal">
+		<div class="form-group">
+			<label for="title" class="col-sm-1" >Title</label>
+			<div class="col-sm-2">
+				<input type="text" name="title" class="col-sm-2 form-control">
+			</div>
+		</div>
+		<div id="epiceditor" style=' height:400px;'></div>
+		<button type="submit" class="btn btn-success ">Submit</button>
+  </form>
+
+  <button type="button" class="btn btn-success " id="pre">Prevoew</button>
+</div>
+<script>
+(function (window) {
+  "use strict";
+
+// A simple helper function to insert prefix + postfix in the selection range
+
+  function surroundWith(document, selection, prefix, postfix) {
+
+// If no document is given, use the default window.document
+
+    if (document === null || document === undefined) {
+      document = window.document;
+    }
+
+// If no selection is made, nothing to do
+
+    if (selection.rangeCount === 0) {
+      return;
+    }
+
+// If postfix is not given, let prefix == postfix
+
+    if (!postfix) {
+      postfix = prefix;
+    }
+
+// Insert the prefix
+
+    var range = selection.getRangeAt(0);
+    range.insertNode(document.createTextNode(prefix));
+
+    range.collapse(false);
+
+// And the postfix
+
+    selection.removeAllRanges();
+    selection.addRange(range);
+    range.insertNode(document.createTextNode(postfix));
+
+  }
+
+// A very simple command set: bold, italic with no apparent interface...
+// This is just a demo, so if you really wish to use Command pattern for this
+// please do so.
+
+  var Commands = Object.create(null);
+  Commands = {
+    bold: function (editor, selection) {
+      surroundWith(editor.editorIframeDocument, selection, '**');
+    },
+
+    italic: function (editor, selection) {
+      surroundWith(editor.editorIframeDocument, selection, '*');
+    },
+
+    code: function (editor, selection) {
+      surroundWith(editor.editorIframeDocument, selection, '`');
+    }
+  };
+
+  window.DefaultCommands = Commands;
+}(window));
+;
+(function (window, document) {
+  "use strict";
+
+// Define a Toolbar object which deals with commands issued to an instance
+// of EpicEditor.
+
+  var Toolbar = function (id, editor, commands) {
+    this.container = document.getElementById(id);
+    this.editor = editor;
+    this.commands = commands;
+
+    if (!id) {
+      throw new Error('Unable to find toolbar container: ' + id);
+    }
+
+    if (!(editor instanceof EpicEditor)) {
+      throw new Error('You must provide an instance of EpicEditor');
+    }
+
+// Let's hard wire in the commands list for now
+
+
+// Tap into HTML's data-command attribute and trigger command on click
+
+    this.container.addEventListener('click', function (event) {
+      var target = event.target;
+      var command = target.getAttribute('data-command');
+      this.executeCommand(command);
+    }.bind(this), false);
+  };
+
+// Toolbar object has a very simple interface, just execute..
+
+  Toolbar.prototype = {
+    executeCommand: function (command) {
+
+      if (!command) {
+        return;
+      }
+
+// Each command is called with two arguments: editor and current selection.
+// Note that selection object can be null.
+
+      var selection = this.editor.editorIframeDocument.getSelection();
+      this.commands[command](this.editor, selection);
+
+    }
+  };
+
+  window.Toolbar = Toolbar;
+}(window, window.document));
+;
+(function (window) {
+  "use strict";
+
+// Default content to display to EpicEditor
+
+  var text = [
+    "# Introducing EpicEditor",
+    "",
+    "This is a demo site which contains examples on bending EpicEditor to your will. Be it text formatting, interacting with `Selection` and `Range` objects or even implementing your own UI elements – this page serves to demonstrate some of the way you can use EpicEditor.",
+    "",
+    "## Text Formatting, almost WYSIWYG",
+    "",
+    "In this section, we'll have a look at using existing EpicEditor API methods to implement a simple toolbar which makes texts bold, italic and etc. If you haven't realised by now, there is a very simple toolbar presented above the editor. Try selecting text in this editor and press any one of those buttons.",
+    "",
+    "### Relevant source codes",
+    "",
+    "```javascript",
+    "public/js/toolbar.js",
+    "public/js/commands.js",
+    "```",
+    "",
+    "Take a peek at them and see how those buttons are implemented!"
+  ].join('\n');
+
+
+  var options = {
+    file: {
+      name: 'demo',
+      defaultContent: text
+    }
+  };
+  var editor = new EpicEditor(options).load();
+  var commands = window.DefaultCommands;
+  var toolbar = new Toolbar('toolbar', editor, commands);
+
+}(window));
+
+</script>
+<script src="/static/epiceditor/js/main.js"></script>
+{% endblock %}
