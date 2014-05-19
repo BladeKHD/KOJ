@@ -1,0 +1,20 @@
+from django.conf.urls import *
+urlpatterns=patterns('oj.views',
+	url(r'^$','index'),
+	url(r'^problemlist/$','problemlist',name='problemlist'),
+	url(r'^problem/(?P<id>\d{4})/$', 'problem_show', name='detailproblem'),
+	# url(r'^$','index'),
+	url(r'^status/$','status'),
+	url(r'^login/$','LoginIn'),
+	url(r'^register/$','register'),
+	url(r'^change/$','changpwd'),
+	url(r'^logout/$','log_out'),
+	url(r'^contestlist/$','contestlist'),
+	url(r'^contest/(?P<id>\d{4})/$','contest_show'),
+	url(r'^submit/$','submit'),
+	url(r'^code/(?P<id>\d*)/$','code_show'),
+	url(r'^ranklist/$','ranklist'),
+	url(r'^userdetail/(?P<user_id>\w+)$','userdetail'),
+	url(r'^update/$','update'),
+	url(r"^blog/new/$",'new_blog')
+	)
